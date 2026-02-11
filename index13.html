@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1nspir3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Philosopher:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --night-sky: #0a0e27;
+            --twilight: #1a2456;
+            --sun-gold: #ffb347;
+            --sun-core: #fff4e6;
+            --mushroom-purple: #b565d8;
+            --mushroom-glow: #d896ff;
+            --mushroom-stem: #e8d5ff;
+            --agave-green: #6b9080;
+            --agave-blue: #4a7c88;
+            --lightning-blue: #00d4ff;
+            --lightning-white: #ffffff;
+            --tech-cyan: #00ffff;
+            --tech-pink: #ff00ff;
+            --neural-orange: #ff6b35;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Philosopher', sans-serif;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 20%, var(--twilight) 0%, var(--night-sky) 60%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Animated sun */
+        .sun {
+            position: absolute;
+            top: 8%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--sun-core) 0%, var(--sun-gold) 50%, rgba(255, 179, 71, 0) 70%);
+            border-radius: 50%;
+            animation: sunPulse 6s ease-in-out infinite;
+            box-shadow: 
+                0 0 60px var(--sun-gold),
+                0 0 120px rgba(255, 179, 71, 0.5),
+                inset 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+
+        .sun::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, transparent 40%, var(--sun-gold) 41%, transparent 42%);
+            animation: sunRays 12s linear infinite;
+        }
+
+        @keyframes sunPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes sunRays {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Lightning bolts - Catatumbo style */
+        .lightning-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .lightning {
+            position: absolute;
+            width: 3px;
+            height: 200px;
+            background: linear-gradient(to bottom, 
+                var(--lightning-white) 0%, 
+                var(--lightning-blue) 50%, 
+                transparent 100%);
+            box-shadow: 
+                0 0 10px var(--lightning-white),
+                0 0 20px var(--lightning-blue),
+                0 0 30px var(--lightning-blue);
+            opacity: 0;
+            filter: blur(1px);
+        }
+
+        .lightning.strike {
+            animation: lightningStrike 0.4s ease-out;
+        }
+
+        @keyframes lightningStrike {
+            0% { opacity: 0; transform: translateY(-50px) scaleY(0); }
+            10% { opacity: 1; transform: translateY(0) scaleY(1); }
+            20% { opacity: 0.7; }
+            30% { opacity: 1; }
+            40% { opacity: 0; }
+            50% { opacity: 0.9; }
+            100% { opacity: 0; transform: translateY(0) scaleY(1); }
+        }
+
+        /* Atmospheric particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            50% { transform: translateY(-100vh) translateX(30px); opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-120vh) translateX(0); opacity: 0; }
+        }
+
+        /* Main scene container */
+        .scene {
+            position: relative;
+            width: 90vw;
+            max-width: 900px;
+            height: 85vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        /* Agave plants */
+        .agave-left, .agave-right {
+            position: absolute;
+            bottom: 15%;
+        }
+
+        .agave-left {
+            left: 5%;
+            animation: agaveSway 5s ease-in-out infinite;
+        }
+
+        .agave-right {
+            right: 8%;
+            animation: agaveSway 5s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes agaveSway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .agave-leaf {
+            width: 80px;
+            height: 15px;
+            background: linear-gradient(to right, var(--agave-blue) 0%, var(--agave-green) 50%, var(--agave-blue) 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform-origin: bottom center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .agave-leaf:nth-child(1) { transform: translateX(-50%) rotate(-40deg); }
+        .agave-leaf:nth-child(2) { transform: translateX(-50%) rotate(-20deg); width: 90px; }
+        .agave-leaf:nth-child(3) { transform: translateX(-50%) rotate(0deg); width: 100px; }
+        .agave-leaf:nth-child(4) { transform: translateX(-50%) rotate(20deg); width: 90px; }
+        .agave-leaf:nth-child(5) { transform: translateX(-50%) rotate(40deg); }
+
+        /* The magical mushroom */
+        .mushroom {
+            position: relative;
+            animation: breathe 4.5s ease-in-out infinite;
+            transform-origin: bottom center;
+            filter: drop-shadow(0 30px 60px rgba(181, 101, 216, 0.6));
+            z-index: 10;
+        }
+
+        @keyframes breathe {
+            0%, 100% { 
+                transform: scale(1) translateY(0); 
+            }
+            50% { 
+                transform: scale(1.05) translateY(-12px); 
+            }
+        }
+
+        /* Shorter mushroom stem */
+        .stem {
+            width: 160px;
+            height: 140px;
+            background: linear-gradient(to right, 
+                rgba(200, 180, 230, 0.9) 0%, 
+                var(--mushroom-stem) 50%, 
+                rgba(200, 180, 230, 0.9) 100%);
+            border-radius: 0 0 45% 45% / 0 0 60% 60%;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 
+                inset -15px 0 25px rgba(181, 101, 216, 0.3),
+                inset 15px 0 25px rgba(255, 255, 255, 0.2),
+                0 15px 40px rgba(181, 101, 216, 0.5);
+            animation: stemSway 4.5s ease-in-out infinite;
+        }
+
+        @keyframes stemSway {
+            0%, 100% { transform: skewX(0deg); }
+            50% { transform: skewX(1.5deg); }
+        }
+
+        /* Magical mushroom cap */
+        .cap {
+            width: 450px;
+            height: 220px;
+            background: radial-gradient(ellipse at 50% 100%, 
+                var(--mushroom-purple) 0%, 
+                var(--mushroom-glow) 40%, 
+                var(--mushroom-purple) 80%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            animation: capPulse 4.5s ease-in-out infinite;
+            box-shadow: 
+                inset 0 -40px 60px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(216, 150, 255, 0.6),
+                0 15px 40px rgba(181, 101, 216, 0.5);
+        }
+
+        @keyframes capPulse {
+            0%, 100% { 
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            }
+            50% { 
+                border-radius: 50% 50% 50% 50% / 68% 68% 32% 32%;
+            }
+        }
+
+        /* Bioluminescent spots */
+        .cap::before,
+        .cap::after {
+            content: '';
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(0, 212, 255, 0.4) 100%);
+            border-radius: 50%;
+            animation: biolumGlow 3s ease-in-out infinite;
+        }
+
+        .cap::before {
+            width: 70px;
+            height: 50px;
+            top: 25%;
+            left: 20%;
+        }
+
+        .cap::after {
+            width: 55px;
+            height: 40px;
+            top: 30%;
+            right: 25%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes biolumGlow {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 20px rgba(0, 212, 255, 0.5); }
+            50% { opacity: 0.8; box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+        }
+
+        /* Mushroom gills */
+        .gills {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 35px;
+            background: linear-gradient(to bottom, rgba(232, 213, 255, 0.5) 0%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(3px);
+        }
+
+        /* Forest ecosystem on top */
+        .forest {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            animation: forestSway 4.5s ease-in-out infinite;
+        }
+
+        @keyframes forestSway {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            50% { transform: translateX(-50%) rotate(0.8deg); }
+        }
+
+        .tree {
+            position: relative;
+            animation: treeBreathe 4.5s ease-in-out infinite;
+        }
+
+        .tree:nth-child(1) { animation-delay: 0s; }
+        .tree:nth-child(2) { animation-delay: 0.4s; }
+        .tree:nth-child(3) { animation-delay: 0.8s; }
+        .tree:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes treeBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.03); }
+        }
+
+        .tree-trunk {
+            width: 14px;
+            height: 55px;
+            background: linear-gradient(to right, #3a2518 0%, #5a3825 50%, #3a2518 100%);
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+
+        .tree-foliage {
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 65px solid #4a7c59;
+            position: relative;
+            top: -10px;
+            filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.5));
+        }
+
+        .tree:nth-child(even) .tree-foliage {
+            border-bottom-color: #5a8f6a;
+        }
+
+        .tree:nth-child(2) {
+            transform: scale(1.3);
+        }
+
+        /* AI/Tech elements - Neural network visualization */
+        .neural-network {
+            position: absolute;
+            top: 20%;
+            left: 8%;
+            width: 120px;
+            height: 120px;
+            opacity: 0.7;
+            animation: networkPulse 5s ease-in-out infinite;
+        }
+
+        @keyframes networkPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+
+        .neural-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--tech-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--tech-cyan);
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .neural-connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, var(--tech-cyan), var(--tech-pink));
+            opacity: 0.6;
+            animation: dataFlow 3s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        /* Maple leaves - Canada element */
+        .maple-leaf {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            animation: leafFloat 8s ease-in-out infinite;
+        }
+
+        .maple-leaf-1 {
+            top: 15%;
+            left: 12%;
+            animation-delay: 0s;
+        }
+
+        .maple-leaf-2 {
+            top: 45%;
+            right: 18%;
+            animation-delay: 2s;
+            transform: scale(0.8);
+        }
+
+        @keyframes leafFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg); 
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-15px) rotate(5deg); 
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-8px) rotate(-3deg); 
+                opacity: 0.9;
+            }
+            75% { 
+                transform: translateY(-20px) rotate(8deg); 
+                opacity: 1;
+            }
+        }
+
+        .maple-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(220, 53, 69, 0.4));
+        }
+
+        /* Robot element */
+        .robot {
+            position: absolute;
+            bottom: 20%;
+            right: 12%;
+            width: 80px;
+            height: 100px;
+            animation: robotFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .robot-head {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--tech-cyan) 0%, var(--tech-pink) 100%);
+            border-radius: 8px;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 20px var(--tech-cyan);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--neural-orange);
+            border-radius: 50%;
+            top: 15px;
+            animation: eyeBlink 4s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--neural-orange);
+        }
+
+        .robot-eye.left { left: 12px; }
+        .robot-eye.right { right: 12px; }
+
+        @keyframes eyeBlink {
+            0%, 100% { opacity: 1; }
+            48%, 52% { opacity: 0; }
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: var(--tech-cyan);
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .robot-antenna::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--neural-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neural-orange);
+            animation: antennaPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes antennaPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.5); }
+        }
+
+        .robot-body {
+            width: 60px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.6) 0%, rgba(255, 0, 255, 0.6) 100%);
+            border-radius: 5px;
+            margin: 5px auto 0;
+            border: 2px solid var(--tech-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Mystical aura around mushroom */
+        .aura {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--mushroom-glow) 0%, transparent 60%);
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.3;
+            animation: auraPulse 4.5s ease-in-out infinite;
+            pointer-events: none;
+            filter: blur(50px);
+        }
+
+        @keyframes auraPulse {
+            0%, 100% { opacity: 0.2; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.4; transform: translateX(-50%) scale(1.15); }
+        }
+
+        /* Ground layer */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(to top, var(--night-sky) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .sun {
+                width: 100px;
+                height: 100px;
+                top: 5%;
+                right: 10%;
+            }
+
+            .cap {
+                width: 320px;
+                height: 160px;
+            }
+            
+            .stem {
+                width: 120px;
+                height: 100px;
+            }
+            
+            .gills {
+                width: 280px;
+            }
+            
+            .forest {
+                top: -70px;
+                gap: 12px;
+            }
+            
+            .tree-trunk {
+                width: 10px;
+                height: 40px;
+            }
+            
+            .tree-foliage {
+                border-left: 25px solid transparent;
+                border-right: 25px solid transparent;
+                border-bottom: 50px solid #4a7c59;
+            }
+
+            .neural-network {
+                width: 80px;
+                height: 80px;
+                left: 5%;
+            }
+
+            .robot {
+                width: 60px;
+                height: 80px;
+                right: 8%;
+            }
+
+            .robot-head {
+                width: 40px;
+                height: 32px;
+            }
+
+            .robot-body {
+                width: 48px;
+                height: 40px;
+            }
+
+            .agave-left, .agave-right {
+                transform: scale(0.8);
+            }
+
+            .maple-leaf {
+                width: 45px;
+                height: 45px;
+            }
+
+            .maple-leaf-1 {
+                left: 8%;
+            }
+
+            .maple-leaf-2 {
+                right: 10%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sun -->
+    <div class="sun"></div>
+
+    <!-- Maple Leaves - Canada -->
+    <div class="maple-leaf maple-leaf-1">
+        <svg class="maple-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,5 L45,35 L30,25 L40,45 L15,45 L35,55 L25,75 L45,65 L50,95 L55,65 L75,75 L65,55 L85,45 L60,45 L70,25 L55,35 Z" 
+                  fill="#DC3545" 
+                  stroke="#A02030" 
+                  stroke-width="1.5"/>
+        </svg>
+    </div>
+    <div class="maple-leaf maple-leaf-2">
+        <svg class="maple-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,5 L45,35 L30,25 L40,45 L15,45 L35,55 L25,75 L45,65 L50,95 L55,65 L75,75 L65,55 L85,45 L60,45 L70,25 L55,35 Z" 
+                  fill="#DC3545" 
+                  stroke="#A02030" 
+                  stroke-width="1.5"/>
+        </svg>
+    </div>
+
+    <!-- Lightning -->
+    <div class="lightning-container" id="lightning"></div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Main scene -->
+    <div class="scene">
+        <div class="aura"></div>
+
+        <!-- Agave plants -->
+        <div class="agave-left">
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+        </div>
+
+        <div class="agave-right">
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+            <div class="agave-leaf"></div>
+        </div>
+
+        <!-- Neural Network (AI) -->
+        <div class="neural-network" id="network"></div>
+
+        <!-- Robot -->
+        <div class="robot">
+            <div class="robot-head">
+                <div class="robot-antenna"></div>
+                <div class="robot-eye left"></div>
+                <div class="robot-eye right"></div>
+            </div>
+            <div class="robot-body"></div>
+        </div>
+
+        <!-- The magical mushroom -->
+        <div class="mushroom">
+            <!-- Forest ecosystem -->
+            <div class="forest">
+                <div class="tree">
+                    <div class="tree-foliage"></div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree">
+                    <div class="tree-foliage"></div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree">
+                    <div class="tree-foliage"></div>
+                    <div class="tree-trunk"></div>
+                </div>
+                <div class="tree">
+                    <div class="tree-foliage"></div>
+                    <div class="tree-trunk"></div>
+                </div>
+            </div>
+            
+            <!-- Mushroom cap -->
+            <div class="cap">
+                <div class="gills"></div>
+            </div>
+            
+            <!-- Shorter mushroom stem -->
+            <div class="stem"></div>
+        </div>
+    </div>
+
+    <!-- Ground -->
+    <div class="ground"></div>
+
+    <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 40;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 3 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particle.style.animationDuration = `${Math.random() * 8 + 10}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Create Catatumbo-style lightning strikes
+        const lightningContainer = document.getElementById('lightning');
+        
+        function createLightning() {
+            const lightning = document.createElement('div');
+            lightning.className = 'lightning strike';
+            lightning.style.left = `${Math.random() * 100}%`;
+            lightning.style.top = `${Math.random() * 40}%`;
+            lightning.style.height = `${Math.random() * 150 + 100}px`;
+            lightning.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+            
+            lightningContainer.appendChild(lightning);
+            
+            setTimeout(() => {
+                lightning.remove();
+            }, 400);
+        }
+
+        // Random lightning strikes
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createLightning();
+                setTimeout(() => {
+                    if (Math.random() > 0.5) createLightning();
+                }, 150);
+            }
+        }, 2000);
+
+        // Create neural network nodes and connections
+        const network = document.getElementById('network');
+        const nodes = [
+            {x: 20, y: 20},
+            {x: 80, y: 15},
+            {x: 50, y: 50},
+            {x: 15, y: 75},
+            {x: 90, y: 80},
+            {x: 55, y: 95}
+        ];
+
+        // Create nodes
+        nodes.forEach((pos, i) => {
+            const node = document.createElement('div');
+            node.className = 'neural-node';
+            node.style.left = `${pos.x}%`;
+            node.style.top = `${pos.y}%`;
+            node.style.animationDelay = `${i * 0.3}s`;
+            network.appendChild(node);
+        });
+
+        // Create connections between nodes
+        const connections = [
+            [0, 2], [1, 2], [2, 3], [2, 4], [3, 5], [4, 5]
+        ];
+
+        connections.forEach((conn, i) => {
+            const [start, end] = conn;
+            const startNode = nodes[start];
+            const endNode = nodes[end];
+            
+            const connection = document.createElement('div');
+            connection.className = 'neural-connection';
+            
+            const dx = endNode.x - startNode.x;
+            const dy = endNode.y - startNode.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            connection.style.width = `${distance}%`;
+            connection.style.left = `${startNode.x}%`;
+            connection.style.top = `${startNode.y}%`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            connection.style.transformOrigin = '0 0';
+            connection.style.animationDelay = `${i * 0.5}s`;
+            
+            network.appendChild(connection);
+        });
+    </script>
+</body>
+</html>
